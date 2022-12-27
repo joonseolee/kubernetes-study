@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: configapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: configapp
+  template:
+    metadata:
+      labels:
+        app: configapp
+    spec:
+      containers:
+      - name: configapp
+        image: arisu1000/simple-container-app
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DEBUG_LEVEL
+          valueFrom: # 일부만 참조하고싶을때 
+            configMapKeyRef:
+              name: config-dev
+              key: DEBUG_INFO
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: configapp2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: configapp2
+  template:
+    metadata:
+      labels:
+        app: configapp2
+    spec:
+      containers:
+      - name: configapp2
+        image: arisu1000/simple-container-app
+        ports:
+        - containerPort: 8081
+        envFrom:
+        - configMapRef:
+            name: config-dev
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: configapp
+  name: configapp-svc
+  namespace: default
+spec:
+  selector:
+    app: configapp
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+    nodePort: 30800
+  type: NodePort
