@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: Secret
-metadata:
-  name: user-pass
-type: Opaque
-data:
-  username: dXNlcm5hbWU=
