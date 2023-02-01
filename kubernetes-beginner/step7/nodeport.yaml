@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mydeploy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: myHelloWorld
+  template:
+    metadata:
+      labels:
+        app: myHelloWorld
+    spec:
+      containers:
+      - name: myapp
+        image: nginx
+        ports:
+          - containerPort: 80
+            protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mynp
+spec:
+  type: NodePort # type을 적지않으면 default는 clusterip이므로 꼭 적어줍니다.
+  ports:
+  - port: 80 # 서비스가 사용할 포트
+    targetPort: 80 #서비스가 포워드할 컨테이너포트
+    nodePort: 31212 # 서비스의 노드포트(적지않으면 30000~32768중 자동할당)
+  selector:
+    app: myHelloWorld # app=MyHelloworld인 모든 pod는 이 서비스에 속한다.
