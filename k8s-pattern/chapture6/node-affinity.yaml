@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: random-generator
+  labels:
+    name: random-generator
+spec:
+  containers:
+  - name: random-generator
+    image: k8spatterns/random-generator:1.0
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - topologyKey: security-zone
+          labelSelector:
+            matchLabels:
+              confidential: high
+    podAntiAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - podAffinityTerm:
+            topologyKey: kubernetes.io/hostname
+            labelSelector:
+              matchLabels:
+                confidential: none
+          weight: 100
+            

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-with-readiness-check
+  labels:
+    name: pod-with-readiness-check
+spec:
+  containers:
+  - name: pod-with-readiness-check
+    image: k8spatterns/random-generator:1.0
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    readinessProbe:
+      exec:
+        command:
+          - "stat"
+          - "/var/run/random-generator-ready"

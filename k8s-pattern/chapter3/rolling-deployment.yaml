@@ -7,8 +7,8 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 1
+      maxSurge: 1 # 업데이트할 팟의 갯수 즉, 최대 4개의 레플리카가 될수있다
+      maxUnavailable: 1 # 사용할수없는 팟의 최소 갯수
   selector:
     matchLabels:
       app: random-generator

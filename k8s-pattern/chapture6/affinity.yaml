@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: random-generator
+  labels:
+    name: random-generator
+spec:
+  containers:
+  - name: random-generator
+    image: k8spatterns/random-generator:1.0
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: numberCores
+                operator: Gt
+                values: ["3"]
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - preference:
+            matchFields:
+              - key: metadata.name
+                operator: NotIn # NotIn, In 만 사용가능
+                values: ["master"] # 값은 한개만 
+          weight: 1
