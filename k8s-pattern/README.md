@@ -52,3 +52,34 @@ affinity 에 대한 설명이 많이 나온다.
 
 테인트와 톨러레이션은 팟을 스케줄링할지 안할지 제어가 가능한데 노드에 스케줄링을 허용하는 opt-in 이라고 말하며 affinity 실행할 노드를 명시적으로 선택하여 선택되지 않은 노드를 모두 제외하는 opt-out 이라고 말함.  
 테인트와 톨러레이션이라는 개념이 어렵기때문에 좀더 공부필요.  
+
+## chapter 7
+
+아래에서 `completions` 는 5개의 팟이 실행되어야하고 모두 성공해야한다.  
+`parallelism` 는 2개의 팟이 병렬로 실행될수있다.  
+
+```yaml
+spec:
+  ttlSecondsAfterFinished: 100
+  completions: 5
+  parallelism: 2
+```
+
+## chapter 9
+
+`PodDisruptionBudget` 는 일정수의 팟을 가용상태로 보장한다 라는것을 설정할수있다.  
+업데이트를 하던 뭘하던 app: zookeeper 레이블을 가진 노드에서 최소 2개의 팟을 가용보장한다는 말이다.  
+
+```yaml
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: zookeeper
+```
+
+## chapter 11
+
+`statefulSet` 은 기본적으로 `replicas` 설정할때 `serviceName` 이름 옆 숫자가 붙게된다.  
+다만 다른 `deployment` 같은경우 해시가 붙게되어 순서를 알수없다.  
+
