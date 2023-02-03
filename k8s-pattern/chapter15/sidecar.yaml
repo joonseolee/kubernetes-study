@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-app
+  labels:
+    name: web-app
+spec:
+  containers:
+  - name: web-app
+    image: docker.io/centos/httpd
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 80
+    volumeMounts:
+      - mountPath: /var/www/html
+        name: git
+  - name: poll
+    image: axeclbr/git
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    volumeMounts:
+      - mountPath: /var/lib/data
+        name: git
+    env:
+    - name: GIT_REPO
+      value: https://github.com/mdn/beginner-html-site-scripted
+    command:
+    - "sh"
+    - "-c"
+    - "git clone $(GIT_REPO) . && watch -n 600 git pull"
+    workingDir: /var/lib/data
+  volumes:
+    - name: git
+      emptyDir: {}
+      
+
